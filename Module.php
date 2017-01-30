@@ -2,6 +2,7 @@
 
 namespace DhErrorLogging;
 
+use DhErrorLogging\Options\ModuleOptions;
 use Zend\Console\Console;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Application;
@@ -21,6 +22,9 @@ class Module implements
     private $logger;
     private $generator;
     private $exceptionFilter;
+    /**
+     * @var ModuleOptions
+     */
     private $options;
     private $nonMvcResponseSender;
 
@@ -192,7 +196,7 @@ class Module implements
 
         // 404 route not found exception
         if ($message == Application::ERROR_ROUTER_NO_MATCH) {
-            if (empty($this->config['dherrorlogging']['error_types']['dispatch\router_no_match'])) {
+            if (!$this->options->isErrortypeEnabled('dispatch\router_no_match')) {
                 return;
             }
             $type = '404';
